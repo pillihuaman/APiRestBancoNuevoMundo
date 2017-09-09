@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using API_Video_Imagen.Data.Interface;
+using API_Video_Imagen.Data.Repository;
 
 namespace API_Video_Imagen
 {
@@ -38,6 +40,7 @@ namespace API_Video_Imagen
             services.AddApplicationInsightsTelemetry(Configuration);
 
             services.AddMvc();
+            services.AddTransient<IProcesoImagenes, ProcesoImagenes>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline
@@ -50,7 +53,15 @@ namespace API_Video_Imagen
 
             app.UseApplicationInsightsExceptionTelemetry();
 
-            app.UseMvc();
+            app.UseMvc(
+            routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller=Fotos}/{action=AgregarNuevaFoto}/{id?}");
+            }
+            );
+            //app.UseMvc();
         }
     }
 }
